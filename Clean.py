@@ -5,33 +5,29 @@ import pyperclip
 #Psate the text
 bigString = pyperclip.paste()
 
- 
 #We go over the text and exstract the Telephon &Phone &emails numbers and adress
 #to saprated lists (by type)
 
-#TODO make the regex more acurate
-#to not extract emails with @@, emails with another words bedor and after (אביב־יפוShirel123@12gmail.com)
-#to continue the dibag
-
 ##compile the regexs
-telPhonReg =r"0\d-\d{7}|0\d\d{7}|0\d\d-\d{7}|0\d\d\d{7}|0\d\d-\d{3}-\d{4}|0\d-\d{3}-\d{4}"
-telPhonReg_comp=re.compile(telPhonReg)
-
-phonReg =r"0\d{2}-\d{7}|0\d{2}\d{7}"
-phonReg_comp=re.compile(phonReg)
+telPhoneReg = r"(0\d|0\d\d)[-\ ]{0,1}(\d{3})[-\ ]{0,1}(\d{4})"
+telPhonReg_comp=re.compile(telPhoneReg)
 
 emailReg = r"\S+@\w+\.\w+"
 emailReg_comp=re.compile(emailReg)
 
-
 ##exstract the requierd values 
 bigList = telPhonReg_comp.findall(bigString)
-bigList = bigList + phonReg_comp.findall(bigString)
-bigList = bigList + emailReg_comp.findall(bigString)
-print(bigList)
+
+allPhoneNum = []
+for	groups	in	bigList:
+    phonNum='-'.join([groups[0],groups[1],groups[2]])
+    allPhoneNum.append(phonNum)
+  
+allPhoneNum = allPhoneNum + emailReg_comp.findall(bigString)
+print(allPhoneNum)
 
 #Compy nicly to clicboard
-bigNewString = "\n".join(bigList)
+bigNewString = "\n".join(allPhoneNum)
 pyperclip.copy(bigNewString)
 
 
